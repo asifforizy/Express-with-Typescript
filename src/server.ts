@@ -5,17 +5,18 @@ import express, {
 } from "express"
 
 import { Pool } from "pg"
+import config from "./config";
 
 const app: Application = express()
-const port = 3000
+const port = config.port
 
 app.use(express.json())
 app.use(express.text())
 app.use(express.urlencoded({ extended: true }))
 
 const pool = new Pool({
-  connectionString:
-    "postgresql://neondb_owner:npg_c4Dm9ECArNoO@ep-rapid-sound-aqwv4sj5.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require"
+  connectionString: config.connection_string
+    
 })
 
 const initDB = async () => {
@@ -152,18 +153,20 @@ WHERE id = $1;
 // update
 
 app.put('/api/users/:id', async (req: Request, res: Response) => {
+
   const { id } = req.params
   const { name, email, password, age } = req.body
 
   try {
+
     const result = await pool.query(
       `
       UPDATE users
       SET
-        name = $1,
-        email = $2,
-        password = $3,
-        age = $4,
+        name = COALESCE($1, name),
+        email = COALESCE($2, email),
+        password = COALESCE($3, password),
+        age = COALESCE($4, age),
         updated_at = NOW()
       WHERE id = $5
       RETURNING *
@@ -185,6 +188,7 @@ app.put('/api/users/:id', async (req: Request, res: Response) => {
     })
 
   } catch (error: any) {
+
     res.status(500).json({
       success: false,
       message: error.message,
