@@ -7,6 +7,7 @@ import express, {
 import { Pool } from "pg"
 import config from "./config";
 import { initDB, pool } from "./db";
+import { userRoute } from "./module/user/user.route";
 
 const app: Application = express()
 const port = config.port
@@ -27,38 +28,9 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 
-// post user
+app.use('/api/users',userRoute)
 
-app.post('/api/users', async (req: Request, res: Response) => {
 
-  try {
-
-    const { name, email, password, age } = req.body
-
-    const result = await pool.query(
-      `
-      INSERT INTO users(name, email, password, age)
-      VALUES($1, $2, $3, $4)
-      RETURNING *
-      `,
-      [name, email, password, age]
-    )
-
-    res.status(201).json({
-      success: true,
-      message: "User created successfully",
-      data: result.rows[0]
-    })
-
-  } catch (error: any) {
-
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      error: error
-    })
-  }
-})
 
 
 // get user
