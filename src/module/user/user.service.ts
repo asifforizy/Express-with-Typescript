@@ -33,15 +33,9 @@ WHERE id = $1;
 }
 
 
-const updateInfoFromDB = async (
-    name: string,
-    email: string,
-    password: string,
-    age: number,
-    id: string
-) => {
+const updateInfoFromDB = async (payload: IUser, id: string) => {
 
-
+    const { name, email, password, age } = payload
 
     const result = await pool.query(
         `
@@ -62,7 +56,7 @@ const updateInfoFromDB = async (
 
 
 
-const deleteUserFromDB = async (id : string) => {
+const deleteUserFromDB = async (id: string) => {
     const result = await pool.query(
         `
       DELETE FROM users

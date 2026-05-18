@@ -69,16 +69,10 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const updateUserInfo = async (req: Request, res: Response) => {
     const { id } = req.params
-    const { name, email, password, age } = req.body
+   
 
     try {
-        const result = await userService.updateInfoFromDB(
-            name,
-            email,
-            password,
-            Number(age),
-            id as string
-        )
+        const result = await userService.updateInfoFromDB(req.body ,id as string)
 
         if (result.rows.length === 0) {
             return res.status(404).json({
@@ -128,6 +122,9 @@ const deleteUser = async (req: Request, res: Response) => {
     }
 }
 
+
+
+// export
 export const userController = {
     createUser,
     getAlluser,
