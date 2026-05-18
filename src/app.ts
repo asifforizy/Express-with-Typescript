@@ -4,10 +4,10 @@ import express, {
   type Response
 } from "express"
 
-import { Pool } from "pg"
 import config from "./config";
-import { initDB, pool } from "./db";
+
 import { userRoute } from "./module/user/user.route";
+import { profileRoute } from "./module/profile/profile.route";
 
 const app: Application = express()
 const port = config.port
@@ -29,6 +29,8 @@ app.get('/', (req: Request, res: Response) => {
 
 
 app.use('/api/users',userRoute)
+
+app.use("/api/profile",profileRoute)
 
 
 
