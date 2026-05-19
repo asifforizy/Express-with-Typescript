@@ -3,7 +3,7 @@ import { profileService } from "./profile.service";
 
 const createProfile = async (req: Request, res: Response) => {
     try {
-        console.log("REQ BODY 👉", req.body);
+       
         const result = await profileService.createProfile(req.body)
         res.status(201).json({
             success: true,
